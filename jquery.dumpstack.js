@@ -12,27 +12,47 @@
  * http://appendto.com/open-source-licenses
  */
 (function($) {
-	function log(msg) {
-		if ( console && console.log ) {
-			console.log(msg);
-		}
-	}
-	// Debugging methods
-	$.fn.dumpStack = function(title, content) {
-		if (this.length == 0) {
-			log('dumpStack ' + (title ? '(' + title + ') ' : '') + 'empty');
-		} else {
-			log('dumpStack ' + (title ? '(' + title + ') ' : '') + this.length);
-			this.each(function(i) {
-				log(i + ': '
+    function log(msg) {
+        if (console && console.log) {
+            console.log(msg);
+        }
+    }
+
+    function logEvents(index, events) {
+        if (events) {
+            $.each(events, function(key, handler) {
+                log(index + ': eventName - ' + key);
+                if (handler) {
+                    $.each(handler, function(i, evtHandler) {
+                        log('   ' + i + ': eventHandler - ' + ' JS[' + evtHandler.handler.toString().substr(0, 45) + '...]');
+                    })
+                }
+            })
+        };
+    }
+
+    // Debugging methods
+    $.fn.dumpStack = function(title, content) {
+        if (this.length == 0) {
+            log('dumpStack ' + (title ? '(' + title + ') ' : '') + 'empty');
+        } else {
+            log('dumpStack ' + (title ? '(' + title + ') ' : '') + this.length);
+            this.each(function(i) {
+                log(i + ': '
 								+ this.tagName
 								+ (this.id ? '#' + this.id : '')
 								+ (this.className != '' ? '.' + this.className.replace(/\s/g, '.') : '')
-								+ ( $(this).is(':input') ? ' VAL[' + $(this).val() + ']' : '' )
-								+ (title === true || content ? ' HTML[' + $(this).html().substr(0, 45) + '...]' : ''));
-			});
-			log('dumpStack (end)');
-		}
-		return this;
-	};
+								+ ($(this).is(':input') ? ' VAL[' + $(this).val() + ']' : '')
+								+ (title === true || content ? ' HTML[' + ($.trim($(this).html().substr(0, 45))) + '...]' : '')
+
+				);
+
+                var events = $(this).data('events');
+
+                logEvents(i, events);
+            });
+            log('dumpStack (end)');
+        }
+        return this;
+    };
 })(jQuery);
