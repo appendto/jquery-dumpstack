@@ -23,8 +23,13 @@
             $.each(events, function(key, handler) {
                 log(index + ': eventName - ' + key);
                 if (handler) {
-                    $.each(handler, function(i, evtHandler) {
-                        log('   ' + i + ': eventHandler - ' + ' JS[' + evtHandler.handler.toString().substr(0, 45) + '...]');
+                    $.each(handler, function(j, evtHandler) {
+                        // Check for older versions of jQuery.
+						if (evtHandler.handler) {
+							log('   ' + j + ': eventHandler - ' + ' JS[' + evtHandler.handler.toString().substr(0, 45) + '...]');
+						} else {
+							log('   ' + j + ': eventHandler - ' + ' JS[' + evtHandler.toString().substr(0, 45) + '...]');
+						}
                     })
                 }
             })
